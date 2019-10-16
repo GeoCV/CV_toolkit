@@ -86,7 +86,7 @@ def compute_iou(rec1, rec2):
 
 
 def get_ocr(input_path):
-    return
+    return 0
 
 
 site_point(input_path, search_path)
