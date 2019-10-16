@@ -2,42 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="83886d0f-4b38-4c63-95d6-7f8f7bd66bc1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/demo/demo2png.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/demo/esstimate.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/demo/jpg_demo.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/demo/jpg_demo_quality.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/demo/jpg_demo_size.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/demo/lena.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/measure.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/modelparameters.mat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/niqe.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/psnr.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/reco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/ssim.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/ssim_theano.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PSNR&amp;SSIM/vifp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/video-quality.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/video-quality.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/map_decoder/decoder.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/map_decoder/target.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/demo2png.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/esstimate.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/jpg_demo.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/jpg_demo_quality.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/jpg_demo_size.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/lena.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/measure.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/modelparameters.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/niqe.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/psnr.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/reco.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ssim.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ssim_theano.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vifp.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -90,7 +57,29 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.demo2png">
+  <component name="RunManager" selected="Python.decoder">
+    <configuration name="decoder" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="video-quality" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/map_decoder" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/map_decoder/decoder.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="demo2png" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="video-quality" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -137,6 +126,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.decoder" />
         <item itemvalue="Python.demo2png" />
         <item itemvalue="Python.jpg_demo" />
       </list>
@@ -157,7 +147,7 @@
       <workItem from="1543997063222" duration="2613000" />
       <workItem from="1544136759226" duration="13414000" />
       <workItem from="1547023706436" duration="814000" />
-      <workItem from="1571130182292" duration="120000" />
+      <workItem from="1571130182292" duration="11160000" />
     </task>
     <servers />
   </component>
@@ -190,5 +180,8 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/CV_toolkit$decoder.coverage" NAME="decoder Coverage Results" MODIFIED="1571206914647" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/map_decoder" />
   </component>
 </project>
