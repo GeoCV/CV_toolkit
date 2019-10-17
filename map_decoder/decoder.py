@@ -6,6 +6,7 @@ from skimage.measure import compare_ssim
 input_path = '../../scrapy_structure/military/USNI_images/April 1, 2019 12:07 PM'
 search_path = './target.jpg'
 
+
 def site_point(input_path, search_path):
     img_rgb = cv2.imread(input_path)
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
@@ -42,16 +43,18 @@ def site_point(input_path, search_path):
                 flag = 1
         if flag != 1:
             nms_list.append(box)
-    print(nms_list)
+    points_list = []
     #显示标记好的图片
-    # for nms in nms_list:
-    #     cv2.circle(img_rgb, (int(nms[1] + w/2), int(nms[0] + h/2)), 40, (0, 0, 255), 4)
+    for nms in nms_list:
+        points_list.append((int(nms[1] + w/2), int(nms[0] + h/2)))
+        cv2.circle(img_rgb, (int(nms[1] + w/2), int(nms[0] + h/2)), 40, (0, 0, 255), 4)
     # cv2.namedWindow('img_rgb', cv2.WINDOW_AUTOSIZE)
     # cv2.namedWindow('img_rgb', cv2.WINDOW_NORMAL)
     # cv2.imshow('img_rgb', img_rgb)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-    return nms_list
+    print(points_list)
+    return points_list
 
 
 # 求交并比
