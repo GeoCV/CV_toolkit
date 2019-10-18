@@ -1,9 +1,12 @@
 import cv2
 import numpy as np
+import sys
+sys.path.append(".")
+import ocr_loader
 from skimage.measure import compare_ssim
 
 # 读取图片
-input_path = '../../scrapy_structure/military/USNI_images/April 1, 2019 12:07 PM'
+input_path = '../../scrapy_structure/military/USNI_images/December 5, 2017 9:49 AM'
 search_path = './target.jpg'
 
 
@@ -53,7 +56,6 @@ def site_point(input_path, search_path):
     # cv2.imshow('img_rgb', img_rgb)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-    print(points_list)
     return points_list
 
 
@@ -88,8 +90,22 @@ def compute_iou(rec1, rec2):
         return (intersect / (sum_area - intersect)) * 1.0
 
 
-def get_ocr(input_path):
-    return 0
+# 取黄色区域的mask输入ocr_loader中进行OCR
+def cls_ocr_res(input_path):
+    img_rgb = cv2.imread(input_path)
+    yellow1 = np.array([32, 128, 200])
+    yellow2 = np.array([128, 255, 255])
+    mask_img = cv2.inRange(img_rgb, yellow1, yellow2)
+    res = ocr_loader.get_ocr_res(cv2_obj=mask_img)
+    return res
 
 
-site_point(input_path, search_path)
+# 找出ocr信息和定位的关系
+def find_relation(points_list, ocr_boxes):
+    for box in ocr_boxes:
+        location = box['location']
+        for point in points_list:
+
+
+
+print(cls_ocr_res(input_path))
