@@ -49,8 +49,8 @@ def site_point(input_path, search_path):
     points_list = []
     #显示标记好的图片
     for nms in nms_list:
-        points_list.append((int(nms[1] + w/2), int(nms[0] + h/2)))
-        cv2.circle(img_rgb, (int(nms[1] + w/2), int(nms[0] + h/2)), 40, (0, 0, 255), 4)
+        points_list.append((int(nms[0] + h/2), int(nms[1] + w/2)))
+        # cv2.circle(img_rgb, (int(nms[1] + w/2), int(nms[0] + h/2)), 40, (0, 0, 255), 4)
     # cv2.namedWindow('img_rgb', cv2.WINDOW_AUTOSIZE)
     # cv2.namedWindow('img_rgb', cv2.WINDOW_NORMAL)
     # cv2.imshow('img_rgb', img_rgb)
@@ -102,10 +102,37 @@ def cls_ocr_res(input_path):
 
 # 找出ocr信息和定位的关系
 def find_relation(points_list, ocr_boxes):
+    decode_res = []
     for box in ocr_boxes:
         location = box['location']
+        box_center = np.array([location['top'] + location['height']/2, location['width']+location['left']/2], dtype=float)
+        min_dis = (points_list[0], np.linalg.norm(box_center - np.array(points_list[0], dtype=float)))
         for point in points_list:
+            # 计算边界框中心点和定位点的距离,取距离最近的定位点为目标的定位
+            p = np.array(point, dtype=float)
+            dis = np.linalg.norm(box_center - p)
+            if dis < min_dis[1]:
+                min_dis = (point, dis)
+        decode_res.append({'location': min_dis[0], 'words': box['words'], 'distance': min_dis[1]})
+    return decode_res
+
+points_list = site_point(input_path, search_path)
+de_res = find_relation(points_list, cls_ocr_res(input_path))
 
 
+img_rgb = cv2.imread(input_path)
+template = cv2.imread(search_path, 0)
+h, w = template.shape[:2]
+font = cv2.FONT_HERSHEY_SIMPLEX  # 定义字体
 
-print(cls_ocr_res(input_path))
+# print(de_res)
+for r in de_res:
+    cv2.circle(img_rgb, (int(r['location'][1]), int(r['location'][0])), 40, (0, 0, 255), 4)
+    imgzi = cv2.putText(img_rgb, r['words'], (int(r['location'][1] + w), int(r['location'][0] + h)), font, 1.2, (255, 255, 255), 2)
+    # 图像，文字内容， 坐标 ，字体，大小，颜色，字体厚度
+    print(r)
+# cv2.namedWindow('img_rgb', cv2.WINDOW_AUTOSIZE)
+cv2.namedWindow('img_rgb', cv2.WINDOW_NORMAL)
+cv2.imshow('img_rgb', imgzi)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
