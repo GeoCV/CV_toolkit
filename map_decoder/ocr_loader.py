@@ -1,6 +1,7 @@
 import configparser
 import urllib.request
 import urllib.parse
+import urllib3
 import os, sys, base64, json, cv2
 import numpy as np
 
@@ -39,7 +40,7 @@ def get_access_token():
 def get_ocr_res(img_path=None, cv2_obj=None, base64_encode=None):
     access_token = cf.get("Baidu-OCR", "access_token")
     url = cf.get("Baidu-OCR", "ocr_url") + access_token
-    if img_path:
+    if img_path is not None:
         # 二进制方式打开图文件
         f = open(r'' + img_path, 'rb')
         # 参数image：图像base64编码
@@ -51,18 +52,18 @@ def get_ocr_res(img_path=None, cv2_obj=None, base64_encode=None):
         img = base64_encode
     else:
         img = None
-    params = {"image": img}
-    params = urllib.parse.urlencode(params).encode(encoding='UTF8')
+    params = urllib.parse.urlencode({"image": img}).encode(encoding='UTF8')
     request = urllib.request.Request(url, params)
     request.add_header('Content-Type', 'application/x-www-form-urlencoded')
     response = urllib.request.urlopen(request)
     content = response.read()
     if 'error_code' in json.loads(content):
         get_access_token()
+        print('weberror:' + content['error_code'])
         return get_ocr_res(cv2_obj=None, base64_encode=img)
     # print(content)
     else:
         return json.loads(content)['words_result']
 
 
-# print(get_ocr_res('../../scrapy_structure/military/USNI_images/April 1, 2019 12:07 PM'))
+print(get_ocr_res(img_path='./December 5, 2017 9:49 AM'))

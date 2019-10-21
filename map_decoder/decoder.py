@@ -6,8 +6,9 @@ import ocr_loader
 from skimage.measure import compare_ssim
 
 # 读取图片
-input_path = '../../scrapy_structure/military/USNI_images/December 5, 2017 9:49 AM'
+input_path = './December 5, 2017 9:49 AM'
 search_path = './target.jpg'
+img_rgb = cv2.imread(input_path)
 
 
 def site_point(input_path, search_path):
@@ -28,7 +29,7 @@ def site_point(input_path, search_path):
         boxes_list.append((pt[1], pt[0], pt[1] + h, pt[0] + w))
         # cv2.rectangle(img_rgb, pt, right_bottom, (0, 0, 255), 2)
     nms_list.append(boxes_list[0])
-    #去除重复和相近的点
+    # 去除重复和相近的点
     for box in boxes_list:
         flag = 0
         for i, nms in enumerate(nms_list):
@@ -47,7 +48,7 @@ def site_point(input_path, search_path):
         if flag != 1:
             nms_list.append(box)
     points_list = []
-    #显示标记好的图片
+    # 显示标记好的图片
     for nms in nms_list:
         points_list.append((int(nms[0] + h/2), int(nms[1] + w/2)))
         # cv2.circle(img_rgb, (int(nms[1] + w/2), int(nms[0] + h/2)), 40, (0, 0, 255), 4)
@@ -160,8 +161,10 @@ def find_relation(points_list, ocr_boxes):
     #     decode_res.append({'location': p, 'words': min_res[0]['words'], 'distance': min_res[1], 'box': min_res[2]})
     return decode_res
 
+
 points_list = site_point(input_path, search_path)
 de_res = find_relation(points_list, cls_ocr_res(input_path))
+print(points_list)
 
 
 img_rgb = cv2.imread(input_path)
@@ -169,7 +172,7 @@ template = cv2.imread(search_path, 0)
 h, w = template.shape[:2]
 font = cv2.FONT_HERSHEY_SIMPLEX  # 定义字体
 
-# print(de_res)
+print(de_res)
 # for r in de_res:
 #     cv2.circle(img_rgb, (int(r['location'][1]), int(r['location'][0])), 40, (0, 0, 255), 4)
 #     imgzi = cv2.putText(img_rgb, r['words'], (int(r['location'][1] + w), int(r['location'][0] + h)), font, 1.2, (255, 255, 255), 2)
