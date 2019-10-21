@@ -1,7 +1,7 @@
 import configparser
 import urllib.request
 import urllib.parse
-import os,sys,base64,json,cv2
+import os, sys, base64, json, cv2
 import numpy as np
 
 
