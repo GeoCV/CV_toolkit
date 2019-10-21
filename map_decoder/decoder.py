@@ -100,20 +100,64 @@ def cls_ocr_res(input_path):
     return res
 
 
-# 找出ocr信息和定位的关系
+# 通过循环遍历,初步找出ocr信息和定位的关系
+# def find_relation(points_list, ocr_boxes):
+#     decode_res = []
+#     for point in points_list:
+#         p = np.array(point, dtype=float)
+#         min_res = (ocr_boxes[0], 50000)
+#         for i, box in enumerate(ocr_boxes):
+#             # 取边界框各顶点进行计算
+#             box_point = [(box['location']['top'], box['location']['left'])]
+#             box_point.append((box['location']['top'], box['location']['left']+box['location']['width']))
+#             box_point.append((box['location']['top']+box['location']['height'], box['location']['left']))
+#             box_point.append((box['location']['top']+box['location']['height'], box['location']['left']+box['location']['width']))
+#             box_np = np.array(box_point)
+#             # 加大纵坐标的权重有一定效果
+#             # q = np.array([[10, 1], [10, 1], [10, 1], [10, 1]])
+#             # print(q)
+#             # 计算最小欧式距离
+#             box_min = np.sqrt(((box_np - p)**2).sum(axis=1)).min()
+#             if min_res[1] > box_min:
+#                 min_res = (box, box_np, i)
+#         decode_res.append({'location': p, 'words': min_res[0]['words'], 'distance': min_res[1], 'box': min_res[2]})
+#     return decode_res
+
+
+# 利用动态规划和矩阵计算,初步找出ocr信息和定位的关系
 def find_relation(points_list, ocr_boxes):
     decode_res = []
-    for box in ocr_boxes:
-        location = box['location']
-        box_center = np.array([location['top'] + location['height']/2, location['width']+location['left']/2], dtype=float)
-        min_dis = (points_list[0], np.linalg.norm(box_center - np.array(points_list[0], dtype=float)))
-        for point in points_list:
-            # 计算边界框中心点和定位点的距离,取距离最近的定位点为目标的定位
-            p = np.array(point, dtype=float)
-            dis = np.linalg.norm(box_center - p)
-            if dis < min_dis[1]:
-                min_dis = (point, dis)
-        decode_res.append({'location': min_dis[0], 'words': box['words'], 'distance': min_dis[1]})
+    points_np = np.array(points_list, dtype=float)
+    boxes_np = np.array(
+        [([box['location']['top'], box['location']['left']], [box['location']['top'], box['location']['left']+box['location']['width']], [box['location']['top']+box['location']['height'], box['location']['left']], [box['location']['top']+box['location']['height'], box['location']['left']+box['location']['width']]) for box
+         in ocr_boxes], dtype=float)
+    # 得到距离矩阵
+    for box in boxes_np:
+        for point in points_np:
+            decode_res.append(np.sqrt(((box - point)**2).sum(axis=1)))
+    decode_res = np.array(decode_res).reshape([11, 8, 4])
+    print(decode_res)
+    print(decode_res.shape)
+
+
+    # for point in points_list:
+    #     p = np.array(point, dtype=float)
+    #     min_res = (ocr_boxes[0], 50000)
+    #     for i, box in enumerate(ocr_boxes):
+    #         # 取边界框各顶点进行计算
+    #         box_point = [(box['location']['top'], box['location']['left'])]
+    #         box_point.append((box['location']['top'], box['location']['left']+box['location']['width']))
+    #         box_point.append((box['location']['top']+box['location']['height'], box['location']['left']))
+    #         box_point.append((box['location']['top']+box['location']['height'], box['location']['left']+box['location']['width']))
+    #         box_np = np.array(box_point)
+    #         # 加大纵坐标的权重有一定效果
+    #         # q = np.array([[10, 1], [10, 1], [10, 1], [10, 1]])
+    #         # print(q)
+    #         # 计算最小欧式距离
+    #         box_min = np.sqrt(((box_np - p)**2).sum(axis=1)).min()
+    #         if min_res[1] > box_min:
+    #             min_res = (box, box_np, i)
+    #     decode_res.append({'location': p, 'words': min_res[0]['words'], 'distance': min_res[1], 'box': min_res[2]})
     return decode_res
 
 points_list = site_point(input_path, search_path)
@@ -126,13 +170,11 @@ h, w = template.shape[:2]
 font = cv2.FONT_HERSHEY_SIMPLEX  # 定义字体
 
 # print(de_res)
-for r in de_res:
-    cv2.circle(img_rgb, (int(r['location'][1]), int(r['location'][0])), 40, (0, 0, 255), 4)
-    imgzi = cv2.putText(img_rgb, r['words'], (int(r['location'][1] + w), int(r['location'][0] + h)), font, 1.2, (255, 255, 255), 2)
+# for r in de_res:
+#     cv2.circle(img_rgb, (int(r['location'][1]), int(r['location'][0])), 40, (0, 0, 255), 4)
+#     imgzi = cv2.putText(img_rgb, r['words'], (int(r['location'][1] + w), int(r['location'][0] + h)), font, 1.2, (255, 255, 255), 2)
     # 图像，文字内容， 坐标 ，字体，大小，颜色，字体厚度
-    print(r)
-# cv2.namedWindow('img_rgb', cv2.WINDOW_AUTOSIZE)
-cv2.namedWindow('img_rgb', cv2.WINDOW_NORMAL)
-cv2.imshow('img_rgb', imgzi)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# cv2.namedWindow('img_rgb', cv2.WINDOW_NORMAL)
+# cv2.imshow('img_rgb', imgzi)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
