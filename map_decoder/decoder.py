@@ -93,31 +93,7 @@ def cls_ocr_res(input_path):
     return res
 
 
-# 通过循环遍历,初步找出ocr信息和定位的关系
-# def find_relation(points_list, ocr_boxes):
-#     decode_res = []
-#     for point in points_list:
-#         p = np.array(point, dtype=float)
-#         min_res = (ocr_boxes[0], 50000)
-#         for i, box in enumerate(ocr_boxes):
-#             # 取边界框各顶点进行计算
-#             box_point = [(box['location']['top'], box['location']['left'])]
-#             box_point.append((box['location']['top'], box['location']['left']+box['location']['width']))
-#             box_point.append((box['location']['top']+box['location']['height'], box['location']['left']))
-#             box_point.append((box['location']['top']+box['location']['height'], box['location']['left']+box['location']['width']))
-#             box_np = np.array(box_point)
-#             # 加大纵坐标的权重有一定效果
-#             # q = np.array([[10, 1], [10, 1], [10, 1], [10, 1]])
-#             # print(q)
-#             # 计算最小欧式距离
-#             box_min = np.sqrt(((box_np - p)**2).sum(axis=1)).min()
-#             if min_res[1] > box_min:
-#                 min_res = (box, box_np, i)
-#         decode_res.append({'location': p, 'words': min_res[0]['words'], 'distance': min_res[1], 'box': min_res[2]})
-#     return decode_res
-
-
-# 利用动态规划和矩阵计算,初步找出ocr信息和定位的关系,纵坐标权值默认为1:1
+# 利用动态规划和矩阵计算,初步找出ocr信息和定位的关系,纵坐标权值默认为5:1
 def find_relation(points_list, ocr_boxes, q=5):
     distance_tensor = []
     points_np = np.array(points_list, dtype=float)
@@ -127,6 +103,7 @@ def find_relation(points_list, ocr_boxes, q=5):
     # 得到距离矩阵
     for point in points_np:
         for box in boxes_np:
+            # 计算距离后加入权重
             distance_tensor.append(np.sqrt(((box - point)**2).sum(axis=1)) + q * np.sqrt((box[:, 0] - point[0])**2))
     distance_tensor = np.array(distance_tensor).reshape([points_np.shape[0], boxes_np.shape[0], 4])
     mini_point_obx = distance_tensor.min(axis=2)
@@ -163,11 +140,13 @@ template = cv2.imread(search_path, 0)
 h, w = template.shape[:2]
 font = cv2.FONT_HERSHEY_SIMPLEX  # 定义字体
 
-for r in de_res:
-    cv2.circle(img_rgb, (int(r['location'][1]), int(r['location'][0])), 40, (0, 0, 255), 4)
-    imgzi = cv2.putText(img_rgb, r['words'], (int(r['location'][1] + w), int(r['location'][0] + h)), font, 1.2, (255, 255, 255), 2)
-    # 图像，文字内容， 坐标 ，字体，大小，颜色，字体厚度
-cv2.namedWindow('img_rgb', cv2.WINDOW_NORMAL)
-cv2.imshow('img_rgb', imgzi)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+
+# 前台展示结果
+# for r in de_res:
+#     cv2.circle(img_rgb, (int(r['location'][1]), int(r['location'][0])), 40, (0, 0, 255), 4)
+#     imgzi = cv2.putText(img_rgb, r['words'], (int(r['location'][1] + w), int(r['location'][0] + h)), font, 1.2, (255, 255, 255), 2)
+#     # 图像，文字内容， 坐标 ，字体，大小，颜色，字体厚度
+# cv2.namedWindow('img_rgb', cv2.WINDOW_NORMAL)
+# cv2.imshow('img_rgb', imgzi)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
