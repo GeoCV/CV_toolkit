@@ -1,7 +1,7 @@
 import configparser
 import urllib.request
 import urllib.parse
-import urllib3
+# import urllib3
 import os, sys, base64, json, cv2
 import numpy as np
 
@@ -59,7 +59,7 @@ def get_ocr_res(img_path=None, cv2_obj=None, base64_encode=None):
     content = response.read()
     if 'error_code' in json.loads(content):
         get_access_token()
-        print('weberror:' + content['error_code'])
+        print('weberror:' + str(content))
         return get_ocr_res(cv2_obj=None, base64_encode=img)
     # print(content)
     else:
