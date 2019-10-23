@@ -66,4 +66,4 @@ def get_ocr_res(img_path=None, cv2_obj=None, base64_encode=None):
         return json.loads(content)['words_result']
 
 
-print(get_ocr_res(img_path='./December 5, 2017 9:49 AM'))
+# print(get_ocr_res(img_path='./December 5, 2017 9:49 AM'))

@@ -1,27 +1,20 @@
 import cv2
 import numpy as np
 import sys
-sys.path.append(".")
-import ocr_loader
 from skimage.measure import compare_ssim
-from collections import  Counter
-
-# 读取图片
-input_path = './December 5, 2017 9:49 AM'
-search_path = './target.jpg'
+from collections import Counter
+import map_decoder.ocr_loader as ocr_loader
 
 
-def site_point(input_path, search_path):
+# 根据匹配算法获取标记点坐标,匹配程度大于95%的坐标y,x
+def site_point(input_path, search_path='./target.jpg', threshold = 0.95):
     img_rgb = cv2.imread(input_path)
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread(search_path, 0)
     h, w = template.shape[:2]
-
     # cv2.matchTemplate标准相关模板匹配
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
-    threshold = 0.95
-
-    loc = np.where(res >= threshold)  # 匹配程度大于95%的坐标y,x
+    loc = np.where(res >= threshold)
     boxes_list = []
     nms_list = []
     for pt in zip(*loc[::-1]):  # *号表示可选参数
@@ -83,12 +76,20 @@ def compute_iou(rec1, rec2):
         return (intersect / (sum_area - intersect)) * 1.0
 
 
-# 取黄色区域的mask输入ocr_loader中进行OCR
-def cls_ocr_res(input_path):
+# 取黄色区域的mask输入ocr_loader中进行OCR,并去除标记点区域的mask
+def cls_ocr_res(input_path, search_path='./target.jpg'):
     img_rgb = cv2.imread(input_path)
     yellow1 = np.array([32, 128, 200])
     yellow2 = np.array([128, 255, 255])
     mask_img = cv2.inRange(img_rgb, yellow1, yellow2)
+
+    # 选取标记点位置,设置mask,避免其被ocr识别
+    points_list = site_point(input_path)
+    template = cv2.imread(search_path, 0)
+    h, w = template.shape[:2]
+    for point in points_list:
+        mask_img[point[0]-int(h/2): point[0]+int(h/2), point[1]-int(w/2): point[1]+int(w/2)] = 0
+
     res = ocr_loader.get_ocr_res(cv2_obj=mask_img)
     return res
 
@@ -131,17 +132,17 @@ def find_relation(points_list, ocr_boxes, q=5):
     return decode_res
 
 
-points_list = site_point(input_path, search_path)
-de_res = find_relation(points_list, cls_ocr_res(input_path))
-
-
-img_rgb = cv2.imread(input_path)
-template = cv2.imread(search_path, 0)
-h, w = template.shape[:2]
-font = cv2.FONT_HERSHEY_SIMPLEX  # 定义字体
-
+# 局部结果测试
+# input_path = './December 5, 2017 9:49 AM'
+# search_path = './target.jpg'
+# points_list = site_point(input_path)
+# de_res = find_relation(points_list, cls_ocr_res(input_path))
 
 # 前台展示结果
+# img_rgb = cv2.imread(input_path)
+# template = cv2.imread(search_path, 0)
+# h, w = template.shape[:2]
+# font = cv2.FONT_HERSHEY_SIMPLEX  # 定义字体
 # for r in de_res:
 #     cv2.circle(img_rgb, (int(r['location'][1]), int(r['location'][0])), 40, (0, 0, 255), 4)
 #     imgzi = cv2.putText(img_rgb, r['words'], (int(r['location'][1] + w), int(r['location'][0] + h)), font, 1.2, (255, 255, 255), 2)
