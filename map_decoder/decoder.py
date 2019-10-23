@@ -1,13 +1,12 @@
 import cv2
 import numpy as np
-import sys
 from skimage.measure import compare_ssim
 from collections import Counter
 import map_decoder.ocr_loader as ocr_loader
 
 
 # 根据匹配算法获取标记点坐标,匹配程度大于95%的坐标y,x
-def site_point(input_path, search_path='./target.jpg', threshold = 0.95):
+def site_point(input_path, search_path='./target.jpg', threshold=0.95):
     img_rgb = cv2.imread(input_path)
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread(search_path, 0)
@@ -18,9 +17,9 @@ def site_point(input_path, search_path='./target.jpg', threshold = 0.95):
     boxes_list = []
     nms_list = []
     for pt in zip(*loc[::-1]):  # *号表示可选参数
-        right_bottom = (pt[0] + w, pt[1] + h)
         boxes_list.append((pt[1], pt[0], pt[1] + h, pt[0] + w))
     nms_list.append(boxes_list[0])
+
     # 去除重复和相近的点
     for box in boxes_list:
         flag = 0

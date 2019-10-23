@@ -1,7 +1,6 @@
 import numpy as np
 import csv
 import os
-import sys
 import map_decoder.decoder as decoder
 
 input_path = '../../scrapy_structure/military/USNI_images/'
