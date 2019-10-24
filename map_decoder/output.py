@@ -1,7 +1,7 @@
 import numpy as np
 import csv
 import os
-import map_decoder.decoder as decoder
+import map_decoder.Decoder as decoder
 
 input_path = '../../scrapy_structure/military/USNI_images/'
 
@@ -28,8 +28,8 @@ with open(csv_file, 'w')as f:
     f_csv.writeheader()
     for f in files:
         img_path = os.path.join(input_path, f)
-        points_list = decoder.site_point(img_path)
-        de_res = decoder.find_relation(points_list, decoder.cls_ocr_res(img_path))
+        print('----------------processing:' + img_path + '----------------')
+        de_res = decoder.Decoder(img_path).decode_res
         for d in de_res:
             d['time'] = f
             f_csv.writerow(d)
