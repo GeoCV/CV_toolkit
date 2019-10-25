@@ -19,6 +19,7 @@ class Decoder(object):
         self.img_gray = cv2.cvtColor(self.img_rgb, cv2.COLOR_BGR2GRAY)
         self.template = cv2.imread(self.search_path, 0)
         self.points_list = self.site_point(threshold)
+
         self.ocr_boxes = self.cls_ocr_res()
         self.decode_res = self.find_relation(q=lamda)
 
@@ -30,10 +31,6 @@ class Decoder(object):
         loc = np.where(res >= threshold)
         boxes_list = []
         nms_list = []
-        # cv2.namedWindow('img_rgb', cv2.WINDOW_NORMAL)
-        # cv2.imshow('img_rgb', res)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
         for pt in zip(*loc[::-1]):  # *号表示可选参数
             boxes_list.append((pt[1], pt[0], pt[1] + h, pt[0] + w))
         if len(boxes_list) > 0:
@@ -106,6 +103,18 @@ class Decoder(object):
         res = ocr_loader.get_ocr_res(cv2_obj=mask_img)
         return res
 
+    # 取深蓝色区域的mask
+    def get_dark_blue(self):
+        # 深蓝色陆地
+        blue1 = np.array([30, 30, 30])
+        blue2 = np.array([40, 40, 40])
+        # 浅蓝色海洋
+        # blue1 = np.array([36, 73, 102])
+        # blue2 = np.array([36, 73, 102])
+        mask_img = cv2.inRange(self.img_rgb, blue1, blue2)
+
+        return mask_img
+
     # 利用动态规划和矩阵计算,初步找出ocr信息和定位的关系,纵坐标权值默认为5:1
     def find_relation(self, q):
         distance_tensor = []
@@ -153,7 +162,7 @@ class Decoder(object):
 # print(de_res)
 
 # 前台展示结果
-# img_rgb = cv2.imread(input_path)
+# img_rgb = Decoder(input_path).get_dark_blue()
 # template = cv2.imread(search_path, 0)
 # h, w = template.shape[:2]
 # font = cv2.FONT_HERSHEY_SIMPLEX  # 定义字体
@@ -162,6 +171,6 @@ class Decoder(object):
 #     imgzi = cv2.putText(img_rgb, r['words'], (int(r['location'][1] + w), int(r['location'][0] + h)), font, 1.2, (255, 255, 255), 2)
 #     # 图像，文字内容， 坐标 ，字体，大小，颜色，字体厚度
 # cv2.namedWindow('img_rgb', cv2.WINDOW_NORMAL)
-# cv2.imshow('img_rgb', imgzi)
+# cv2.imshow('img_rgb', img_blue)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
