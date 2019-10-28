@@ -1,8 +1,12 @@
 import numpy as np
 import configparser
+from osgeo import gdal
+from osgeo import osr
+from osgeo import ogr
 import os, sys, base64, json, cv2
 
 input_file = './land_mask_16.jpg'
+# dataset = gdal.Open("./static_maps/gdal_map/Continent.shx")
 proDir = os.path.split(os.path.realpath(__file__))[0]
 configPath = os.path.join(proDir, "config.ini")
 cf = configparser.ConfigParser()
@@ -35,4 +39,33 @@ def concat_static_map(maps_dir):
     return final_img
 
 
-concat_static_map('./static_maps/')
+def img_registration(vector_file, img_file, gcps_list=None, gcps_file=None):
+    # 为了支持中文路径，请添加下面这句代码
+    gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "NO")
+    # 为了使属性表字段支持中文，请添加下面这句
+    gdal.SetConfigOption("SHAPE_ENCODING", "")
+    # 注册所有的驱动
+    ogr.RegisterAll()
+    # 打开数据
+    dataset = ogr.Open(vector_file, 0)
+    if dataset is None:
+        print("打开文件vector_file失败！")
+        return
+
+    if gcps_list is None and gcps_file is not None:
+        gcps_list=[]
+        with open(gcps_file) as gf:
+            for r in gf.readline():
+                l = r.split(' ')
+                gcps_list.append(gdal.GCP(l[0], l[1], 0, l[2], l[3]))
+
+    sr = osr.SpatialReference()
+    sr.SetWellKnownGeogCS('WGS84')
+    # 添加控制点
+    dataset.SetGCPs(gcps_list, sr.ExportToWkt())
+    # 进行校正
+    # dst_ds = gdal.Warp(r'xxx_dst.tif', dataset, format='GTiff', tps=True, xRes=0.05, yRes=0.05, dstNodata=65535,
+    #                    srcNodata=65535, resampleAlg=gdal.GRIORA_NearestNeighbour， outputType = gdal.GDT_Int32)
+
+
+img_registration("./static_maps/gdal_map/Continent.shx", input_file, gcps_file='./static_maps/gdal_map/map配准.txt')
