@@ -2,3 +2,5 @@ LICENSE
 README.md
 /.idea
 /env
+.DS_Store
+*/USNI_images
