@@ -2,10 +2,10 @@ import configparser
 import urllib.request
 import urllib.parse
 # import urllib3
-import os, sys, base64, json, cv2
+import os, sys, base64, json, cv2, ssl
 import numpy as np
 
-
+ssl._create_default_https_context = ssl._create_unverified_context
 proDir = os.path.split(os.path.realpath(__file__))[0]
 configPath = os.path.join(proDir, "config.ini")
 cf = configparser.ConfigParser()
@@ -57,12 +57,13 @@ def get_ocr_res(img_path=None, cv2_obj=None, base64_encode=None):
     request.add_header('Content-Type', 'application/x-www-form-urlencoded')
     response = urllib.request.urlopen(request)
     content = response.read()
+    print(content)
     if 'error_code' in json.loads(content):
         get_access_token()
         print('weberror:' + str(content))
         return get_ocr_res(cv2_obj=None, base64_encode=img)
-    # print(content)
     else:
         return json.loads(content)['words_result']
+
 
 # print(get_ocr_res(img_path='./December 5, 2017 9:49 AM'))
