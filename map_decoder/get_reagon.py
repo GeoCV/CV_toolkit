@@ -21,10 +21,20 @@ with open(labeled_f) as f:
                 res_list.append([])
         for o in o_json:
             for p in o['points_list']:
+                flag = False
                 low = p['words'].lower()
                 for e in e_list:
                     for w in e[1]:
-                        if w in low:
+                        if w in low and not flag:
+                            flag = True
+                            p['words'] = e[2]
                             p.update({'time': o['time']})
                             res_list[int(e[0])].append(p)
+                if not flag:
+                    uncognized.append(p)
 print(res_list)
+sum = 0
+for i in res_list:
+    print(len(i))
+    sum += len(i)
+print(sum)

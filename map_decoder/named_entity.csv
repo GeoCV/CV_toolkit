@@ -4,11 +4,11 @@ idx, name, entity
 2,Carl Vinson,卡尔·文森号航空母舰
 3,Theodore Roosevelt,罗斯福号航空母舰
 4,Abraham Lincoln,林肯号航空母舰
-5,George Washington,华盛顿号航空母舰
+5,Washington,华盛顿号航空母舰
 6,John C. Stennis,斯坦尼斯号航空母舰
 7,Harry S. Truman,杜鲁门号航空母舰
 8,Ronald Reagan,里根号航空母舰
-9,George H. W. Bush,布什号航空母舰
+9,H. W. Bush,布什号航空母舰
 10,Gerald R. Ford,福特号航空母舰
 11,Wasp,黄蜂号两栖攻击舰
 12,Essex,埃塞克斯号两栖攻击舰
@@ -17,3 +17,4 @@ idx, name, entity
 15,Bataan,巴丹号两栖攻击舰
 16,Bonhomme Richard,博诺姆·理查德号两栖攻击舰
 17,Iwo Jima,硫磺岛号两栖攻击舰
+18,America,美国号两栖攻击舰
